@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #0a0e27;
+            background: #050510;
             color: #e0e6ed;
             min-height: 100vh;
             overflow-x: hidden;
@@ -93,10 +93,10 @@
         }
         
         .modal-content {
-            background: #1a1f3a;
+            background: #0f1420;
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
             max-width: 400px;
             width: 90%;
         }
@@ -111,8 +111,8 @@
         .password-input {
             width: 100%;
             padding: 12px;
-            background: #0a0e27;
-            border: 2px solid #2a3f5f;
+            background: #050510;
+            border: 2px solid #1a2332;
             border-radius: 8px;
             color: white;
             font-size: 16px;
@@ -162,14 +162,14 @@
         
         /* 사용자 정보 바 */
         .user-info-bar {
-            background: #1a1f3a;
+            background: #0f1420;
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
         
         .my-lunch-time {
@@ -200,8 +200,8 @@
         
         .name-input {
             padding: 8px 12px;
-            background: #0a0e27;
-            border: 2px solid #2a3f5f;
+            background: #050510;
+            border: 2px solid #1a2332;
             border-radius: 8px;
             color: white;
             font-size: 14px;
@@ -226,11 +226,11 @@
         /* 관리자 패널 */
         .admin-panel {
             display: none;
-            background: #1a1f3a;
+            background: #0f1420;
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
         
         .admin-panel.active {
@@ -245,10 +245,10 @@
         }
         
         .control-section {
-            background: #0a0e27;
+            background: #0a0a1a;
             padding: 20px;
             border-radius: 10px;
-            border: 1px solid #2a3f5f;
+            border: 1px solid #1a2332;
         }
         
         .control-section h3 {
@@ -274,8 +274,8 @@
         .form-control {
             width: 100%;
             padding: 10px;
-            background: #0a0e27;
-            border: 2px solid #2a3f5f;
+            background: #050510;
+            border: 2px solid #1a2332;
             border-radius: 8px;
             color: white;
             font-size: 14px;
@@ -342,8 +342,8 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: #0a0e27;
-            border: 2px solid #2a3f5f;
+            background: #050510;
+            border: 2px solid #1a2332;
             border-top: none;
             border-radius: 0 0 8px 8px;
             max-height: 200px;
@@ -380,9 +380,9 @@
             margin: 10px 0;
             min-height: 40px;
             padding: 10px;
-            background: #0a0e27;
+            background: #050510;
             border-radius: 8px;
-            border: 1px dashed #2a3f5f;
+            border: 1px dashed #1a2332;
         }
         
         .selected-member {
@@ -448,10 +448,10 @@
         
         /* 스케줄 표시 영역 */
         .schedule-display {
-            background: #1a1f3a;
+            background: #0f1420;
             border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
         
         .schedule-header {
@@ -482,10 +482,10 @@
         
         .stat-card {
             flex: 1;
-            background: #0a0e27;
+            background: #0a0a1a;
             padding: 15px;
             border-radius: 10px;
-            border: 1px solid #2a3f5f;
+            border: 1px solid #1a2332;
             text-align: center;
         }
         
@@ -503,15 +503,15 @@
         
         /* 시간표 */
         .time-slot {
-            background: #0a0e27;
-            border: 1px solid #2a3f5f;
+            background: #0a0a1a;
+            border: 1px solid #1a2332;
             border-radius: 10px;
             margin-bottom: 8px;
             transition: all 0.3s;
         }
         
         .time-slot:hover {
-            background: #141829;
+            background: #0f0f25;
             border-color: #1e6deb;
         }
         
@@ -534,11 +534,6 @@
             font-size: 18px;
         }
         
-        .leader-slot .time-label::before {
-            content: "★ ";
-            color: #ffd700;
-        }
-        
         .person-list {
             flex: 1;
             display: flex;
@@ -553,18 +548,44 @@
             font-weight: 500;
         }
         
-        /* 팀별 색상 */
-        .team-part1 { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-        .team-part2 { background: rgba(168, 85, 247, 0.2); color: #a78bfa; border: 1px solid rgba(168, 85, 247, 0.3); }
-        .team-part3 { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
-        .team-part4 { background: rgba(251, 146, 60, 0.2); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
-        .team-part5 { background: rgba(236, 72, 153, 0.2); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3); }
+        /* 팀별 색상 (엑셀 기준 - 다크모드 최적화) */
+        .team-part1 { 
+            background: rgba(226, 240, 217, 0.15); 
+            color: #a7f3d0; 
+            border: 1px solid rgba(226, 240, 217, 0.3); 
+        }
+        .team-part2 { 
+            background: rgba(221, 235, 247, 0.15); 
+            color: #93c5fd; 
+            border: 1px solid rgba(221, 235, 247, 0.3); 
+        }
+        .team-part3 { 
+            background: rgba(255, 242, 204, 0.15); 
+            color: #fde047; 
+            border: 1px solid rgba(255, 242, 204, 0.3); 
+        }
+        .team-part4 { 
+            background: rgba(251, 229, 215, 0.15); 
+            color: #fca5a5; 
+            border: 1px solid rgba(251, 229, 215, 0.3); 
+        }
+        .team-part5 { 
+            background: rgba(59, 130, 246, 0.2); 
+            color: #3b82f6; 
+            border: 1px solid rgba(59, 130, 246, 0.4); 
+        }
         
         .leader-badge {
             background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%) !important;
             color: #1a1f3a !important;
             font-weight: bold;
             border: none !important;
+            position: relative;
+        }
+        
+        .leader-badge::before {
+            content: "★ ";
+            color: #1a1f3a;
         }
         
         .empty-state {
@@ -1385,11 +1406,6 @@
                     const slotDiv = document.createElement('div');
                     slotDiv.className = 'time-slot';
                     
-                    const isLeaderSlot = schedule[slot].some(emp => leaders.includes(emp.name));
-                    if (isLeaderSlot) {
-                        slotDiv.classList.add('leader-slot');
-                    }
-                    
                     const content = document.createElement('div');
                     content.className = 'time-slot-content';
                     
@@ -1406,11 +1422,12 @@
                         
                         if (leaders.includes(emp.name)) {
                             badge.className += ' leader-badge';
+                            badge.textContent = `${emp.name} (${emp.team})`;
                         } else {
                             badge.className += ' ' + getTeamClass(emp.team);
+                            badge.textContent = `${emp.name} (${emp.team})`;
                         }
                         
-                        badge.textContent = `${emp.name} (${emp.team})`;
                         personList.appendChild(badge);
                         
                         totalCount++;

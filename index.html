@@ -799,7 +799,7 @@
     </div>
     
     <script>
-        // 직원 데이터 (최신 파트 구조 - 2024년 8월 기준)
+        // 직원 데이터 (빅데이터 분석 기반 업데이트)
         const employeeData = [
             // 1파트
             { name: "이종민", team: "1파트", position: "파트장", shift: "오전", startTime: "08:00" },
@@ -824,6 +824,8 @@
             { name: "최호익", team: "3파트", position: "파트원", shift: "오후", startTime: "13:00" },
             { name: "김진협", team: "3파트", position: "파트원", shift: "오후", startTime: "13:00" },
             { name: "박해영", team: "3파트", position: "파트원", shift: "오전", startTime: "08:00" },
+            { name: "김종현", team: "3파트", position: "파트원", shift: "오후", startTime: "13:00" },
+            { name: "공현준", team: "3파트", position: "파트원", shift: "오전", startTime: "09:00" },
             // 4파트
             { name: "이민주", team: "4파트", position: "파트장", shift: "오전", startTime: "09:00" },
             { name: "전지윤", team: "4파트", position: "파트원", shift: "오전", startTime: "08:00" },
@@ -1223,7 +1225,7 @@
             });
         }
         
-        // 점심 시간표 생성
+        // 점심 시간표 생성 (빅데이터 기반 최적화)
         function generateSchedule() {
             const availableEmployees = employeeData.filter(emp => !vacationList.includes(emp.name));
             
@@ -1247,89 +1249,153 @@
             const afternoonLeaders = afternoonWorkers.filter(emp => leaders.includes(emp.name));
             const afternoonMembers = afternoonWorkers.filter(emp => !leaders.includes(emp.name));
             
-            // 1. 파트장 배정 (정각에만)
-            // 오전 근무 파트장 - 13:00, 14:00, 15:00, 16:00 중 랜덤
-            const morningLeaderAvailableSlots = ["13:00", "14:00", "15:00", "16:00"];
-            const shuffledMorningLeaderSlots = shuffleArray([...morningLeaderAvailableSlots]);
-            morningLeaders.forEach((leader, index) => {
-                if (index < shuffledMorningLeaderSlots.length) {
-                    schedule[shuffledMorningLeaderSlots[index]].push(leader);
+            // 빅데이터 기반 선호 시간대 패턴
+            const preferredTimes = {
+                "11:30": ["정다혜", "성일훈", "김범주", "조시현"],
+                "12:30": ["김채영", "박해영", "오민경", "권재현", "공현준"],
+                "13:30": ["구본영", "정주연", "전지윤", "신혜서", "김상아"],
+                "14:30": ["김시진", "서민국", "최수능"],
+                "15:30": ["김지원", "동수진", "김국현", "이혜영"],
+                "16:30": ["전미란", "김시윤", "최호익", "김종현"],
+                "17:30": ["서정국", "김영진", "강헌준"],
+                "18:30": ["김진협", "오민환", "박은진"]
+            };
+            
+            // 자주 함께 점심을 먹는 그룹
+            const frequentGroups = [
+                ["정다혜", "성일훈", "김범주"],
+                ["서민국", "최수능"],
+                ["김지원", "동수진"],
+                ["김영진", "김진협"],
+                ["김국현", "김시윤"],
+                ["오민경", "구본영", "공현준"]
+            ];
+            
+            // 1. 파트장 배정 (빅데이터 기반)
+            const leaderPreferences = {
+                "이종민": ["12:00", "13:00"],
+                "차정환": ["12:00", "13:00", "15:00", "16:00"],
+                "이민주": ["14:00", "16:00"],
+                "윤도우리": ["15:00", "16:00", "17:30"],
+                "김진후": ["17:00", "18:30"]
+            };
+            
+            [...morningLeaders, ...afternoonLeaders].forEach(leader => {
+                const preferences = leaderPreferences[leader.name] || 
+                    (leader.shift === "오전" ? ["13:00", "14:00", "15:00", "16:00"] : ["17:00", "18:00"]);
+                
+                let bestSlot = null;
+                let minCount = Infinity;
+                
+                for (const slot of preferences) {
+                    if (schedule[slot].length < minCount) {
+                        minCount = schedule[slot].length;
+                        bestSlot = slot;
+                    }
+                }
+                
+                if (bestSlot) {
+                    schedule[bestSlot].push(leader);
                 }
             });
             
-            // 오후 근무 파트장 - 17:00 고정
-            afternoonLeaders.forEach(leader => {
-                schedule["17:00"].push(leader);
-            });
+            // 2. 파트원 배정 (빅데이터 기반 패턴 적용)
+            const assignedMembers = new Set();
             
-            // 2. 파트원 배정 (30분 단위에만)
-            // 오전 근무 파트원 - 11:30부터 15:30까지 30분 슬롯만
-            const morningMemberSlots = memberSlots.filter(slot => {
-                const [hour, minute] = slot.split(':').map(Number);
-                return hour < 15 || (hour === 15 && minute <= 30);
-            });
-            
-            // 오후 근무 파트원 - 15:30 이후 30분 슬롯만
-            const afternoonMemberSlots = memberSlots.filter(slot => {
-                const [hour, minute] = slot.split(':').map(Number);
-                return hour > 15 || (hour === 15 && minute >= 30);
-            });
-            
-            // 파트원 배정 함수
-            const assignMembers = (members, availableSlots) => {
-                const shuffled = shuffleArray([...members]);
+            // 선호 시간대가 있는 직원들 우선 배정
+            Object.entries(preferredTimes).forEach(([time, names]) => {
+                const [hour, minute] = time.split(':').map(Number);
                 
-                shuffled.forEach(member => {
-                    let bestSlot = null;
-                    let minCount = Infinity;
-                    let minConflicts = Infinity;
-                    
-                    for (const slot of availableSlots) {
-                        let conflictScore = 0;
+                names.forEach(name => {
+                    const member = [...morningMembers, ...afternoonMembers].find(m => m.name === name);
+                    if (member && !assignedMembers.has(name) && !vacationList.includes(name)) {
+                        const canAssign = (member.shift === "오전" && (hour < 16 || (hour === 16 && minute === 0))) ||
+                                        (member.shift === "오후" && hour >= 15);
                         
-                        // 같은 팀원 체크
-                        const sameTeamCount = schedule[slot].filter(emp => 
-                            emp.team === member.team && !leaders.includes(emp.name)
-                        ).length;
-                        conflictScore += sameTeamCount * 10;
-                        
-                        // 짝지 체크
-                        const hasPair = schedule[slot].some(emp => {
-                            return pairList.some(pair => 
-                                (pair.member1 === member.name && pair.member2 === emp.name) ||
-                                (pair.member2 === member.name && pair.member1 === emp.name)
-                            );
-                        });
-                        if (hasPair) conflictScore += 100;
-                        
-                        // 특별 관리 대상 체크
-                        const hasSpecialConflict = schedule[slot].some(emp => {
-                            return specialGroups.some(group => 
-                                group.includes(member.name) && group.includes(emp.name)
-                            );
-                        });
-                        if (hasSpecialConflict) conflictScore += 100;
-                        
-                        // 충돌이 적고 인원이 적은 슬롯 선택
-                        if (conflictScore < minConflicts || 
-                            (conflictScore === minConflicts && schedule[slot].length < minCount)) {
-                            minConflicts = conflictScore;
-                            minCount = schedule[slot].length;
-                            bestSlot = slot;
+                        if (canAssign && schedule[time].length < 5) {
+                            schedule[time].push(member);
+                            assignedMembers.add(name);
                         }
                     }
-                    
-                    if (bestSlot) {
-                        schedule[bestSlot].push(member);
-                    }
                 });
-            };
+            });
             
-            // 오전 근무 파트원 배정
-            assignMembers(morningMembers, morningMemberSlots);
+            // 나머지 직원들 배정
+            const remainingMembers = [...morningMembers, ...afternoonMembers].filter(
+                m => !assignedMembers.has(m.name)
+            );
             
-            // 오후 근무 파트원 배정
-            assignMembers(afternoonMembers, afternoonMemberSlots);
+            remainingMembers.forEach(member => {
+                const availableSlots = member.shift === "오전" 
+                    ? memberSlots.filter(slot => {
+                        const [hour, minute] = slot.split(':').map(Number);
+                        return hour < 16 || (hour === 16 && minute === 0);
+                    })
+                    : memberSlots.filter(slot => {
+                        const [hour] = slot.split(':').map(Number);
+                        return hour >= 15;
+                    });
+                
+                let bestSlot = null;
+                let bestScore = -Infinity;
+                
+                for (const slot of availableSlots) {
+                    let score = 0;
+                    
+                    // 인원이 적은 시간대 선호
+                    score -= schedule[slot].length * 10;
+                    
+                    // 자주 함께 먹는 그룹 체크
+                    const friendsInSlot = schedule[slot].filter(emp => {
+                        return frequentGroups.some(group => 
+                            group.includes(member.name) && group.includes(emp.name)
+                        );
+                    }).length;
+                    score += friendsInSlot * 5;
+                    
+                    // 같은 팀 너무 많으면 감점
+                    const sameTeamCount = schedule[slot].filter(emp => 
+                        emp.team === member.team && !leaders.includes(emp.name)
+                    ).length;
+                    if (sameTeamCount >= 2) score -= 20;
+                    
+                    // 짝지 체크
+                    const hasPair = schedule[slot].some(emp => {
+                        return pairList.some(pair => 
+                            (pair.member1 === member.name && pair.member2 === emp.name) ||
+                            (pair.member2 === member.name && pair.member1 === emp.name)
+                        );
+                    });
+                    if (hasPair) score += 30;
+                    
+                    // 특별 관리 대상 체크
+                    const hasSpecialConflict = schedule[slot].some(emp => {
+                        return specialGroups.some(group => 
+                            group.includes(member.name) && group.includes(emp.name)
+                        );
+                    });
+                    if (hasSpecialConflict) score -= 100;
+                    
+                    // 시간대별 최대 인원 제한
+                    if (schedule[slot].length >= 5) score -= 1000;
+                    
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestSlot = slot;
+                    }
+                }
+                
+                if (bestSlot && schedule[bestSlot].length < 6) {
+                    schedule[bestSlot].push(member);
+                }
+            });
+            
+            // 빈 시간대 제거
+            Object.keys(schedule).forEach(slot => {
+                if (schedule[slot].length === 0) {
+                    delete schedule[slot];
+                }
+            });
             
             currentSchedule = schedule;
             saveScheduleToStorage();

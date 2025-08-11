@@ -1,48 +1,4 @@
-// 점심 시간표 생성 함수
-        function generateSchedule() {
-            const availableEmployees = employeeData.filter(emp => !vacationList.includes(emp.name));
-            
-            if (availableEmployees.length === 0) {
-                showWarning('배정 가능한 직원이 없습니다.');
-                return;
-            }
-            
-            const schedule = {};
-            lunchSlots.forEach(slot => {
-                schedule[slot] = [];
-            });
-            
-            // 오전/오후 근무자 분리
-            const morningWorkers = availableEmployees.filter(emp => emp.shift === '오전');
-            const afternoonWorkers = availableEmployees.filter(emp => emp.shift === '오후');
-            
-            // 오전 근무 파트장 (11:30부터 가능)
-            const morningLeaders = morningWorkers.filter(emp => leaders.includes(emp.name));
-            const morningLeaderSlots = ["12:00", "14:00", "15:00"];
-            morningLeaders.forEach((leader, index) => {
-                if (index < morningLeaderSlots.length) {
-                    schedule[morningLeaderSlots[index]].push(leader);
-                }
-            });
-            
-            // 오후 근무 파트장 (13:00 이후만 가능)
-            const afternoonLeaders = afternoonWorkers.filter(emp => leaders.includes(emp.name));
-            const afternoonLeaderSlots = ["13:00", "16:00"];
-            afternoonLeaders.forEach((leader, index) => {
-                if (index < afternoonLeaderSlots.length) {
-                    schedule[afternoonLeaderSlots[index]].push(leader);
-                }
-            });
-            
-            // 오전 근무 일반 직원 (11:30부터 가능)
-            const morningMembers = morningWorkers.filter(emp => !leaders.includes(emp.name));
-            const morningSlots = ["11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00"];
-            
-            let morningSlotIndex = 0;
-            const assigned = new Set();
-            
-            shuffleArray([...morningMembers]).forEach(member => {
-                if (assigne<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -894,8 +850,8 @@
             "16:30", "17:00", "17:30", "18:00", "18:30",
             "19:00", "19:30"
         ];
-        const leaderSlots = ["12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"]; // 정각만
-        const memberSlots = ["11:30", "12:30", "13:30", "14:30", "15:30", "16:30", "17:30", "18:30", "19:30"]; // 30분만
+        const leaderSlots = ["12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"];
+        const memberSlots = ["11:30", "12:30", "13:30", "14:30", "15:30", "16:30", "17:30", "18:30", "19:30"];
         
         let currentMode = 'employee';
         let vacationList = [];
@@ -910,7 +866,7 @@
             const today = new Date();
             document.getElementById('scheduleDate').value = today.toISOString().split('T')[0];
             
-            // 직원 목록 채우기 (연차자용)
+            // 직원 목록 채우기
             const vacationSelect = document.getElementById('vacationSelect');
             employeeData.forEach(emp => {
                 const option = document.createElement('option');
@@ -1008,8 +964,6 @@
             }
             
             myLunchElement.textContent = myTime || '미배정';
-            
-            // 스케줄 테이블에서 내 시간 하이라이트
             highlightMyTime();
         }
         
@@ -1140,7 +1094,6 @@
             const suggestionsDiv = document.getElementById('searchSuggestions');
             
             if (event.key === 'Enter' && searchValue) {
-                // 엔터키 입력 시 첫 번째 검색 결과 선택
                 const firstMatch = employeeData.find(emp => 
                     emp.name.toLowerCase().includes(searchValue) &&
                     !selectedSpecialMembers.includes(emp.name)
@@ -1154,7 +1107,6 @@
                 return;
             }
             
-            // 검색어가 있으면 제안 표시
             if (searchValue) {
                 const matches = employeeData.filter(emp => 
                     emp.name.toLowerCase().includes(searchValue) &&
@@ -1228,7 +1180,6 @@
                 return;
             }
             
-            // 중복 체크
             const isDuplicate = specialGroups.some(group => {
                 const sortedNew = [...selectedSpecialMembers].sort().join(',');
                 const sortedExisting = [...group].sort().join(',');
@@ -1267,20 +1218,10 @@
                     ⚡ ${displayText}
                     <button onclick="removeSpecialGroup(${index})">×</button>
                 `;
-                tag.title = group.join(', '); // 툴팁으로 전체 명단 표시
+                tag.title = group.join(', ');
                 container.appendChild(tag);
             });
         }
-        
-        // 페이지 클릭 시 검색 제안 닫기
-        document.addEventListener('click', function(event) {
-            const searchInput = document.getElementById('specialSearchInput');
-            const suggestionsDiv = document.getElementById('searchSuggestions');
-            
-            if (!searchInput.contains(event.target) && !suggestionsDiv.contains(event.target)) {
-                suggestionsDiv.classList.remove('active');
-            }
-        });
         
         // 점심 시간표 생성
         function generateSchedule() {
@@ -1326,13 +1267,13 @@
             const morningMemberSlots = memberSlots.filter(slot => {
                 const [hour, minute] = slot.split(':').map(Number);
                 return hour < 15 || (hour === 15 && minute <= 30);
-            }); // 11:30, 12:30, 13:30, 14:30, 15:30
+            });
             
             // 오후 근무 파트원 - 15:30 이후 30분 슬롯만
             const afternoonMemberSlots = memberSlots.filter(slot => {
                 const [hour, minute] = slot.split(':').map(Number);
                 return hour > 15 || (hour === 15 && minute >= 30);
-            }); // 15:30, 16:30, 17:30, 18:30, 19:30
+            });
             
             // 파트원 배정 함수
             const assignMembers = (members, availableSlots) => {
@@ -1343,7 +1284,6 @@
                     let minCount = Infinity;
                     let minConflicts = Infinity;
                     
-                    // 가능한 시간대 중에서 조건 확인
                     for (const slot of availableSlots) {
                         let conflictScore = 0;
                         
@@ -1412,7 +1352,6 @@
             const saved = localStorage.getItem('lunchSchedule');
             if (saved) {
                 const data = JSON.parse(saved);
-                // 오늘 날짜와 같은 경우만 로드
                 const today = new Date().toISOString().split('T')[0];
                 if (data.date === today) {
                     currentSchedule = data.schedule;
@@ -1530,6 +1469,16 @@
                 div.style.display = 'none';
             }, 3000);
         }
+        
+        // 페이지 클릭 시 검색 제안 닫기
+        document.addEventListener('click', function(event) {
+            const searchInput = document.getElementById('specialSearchInput');
+            const suggestionsDiv = document.getElementById('searchSuggestions');
+            
+            if (!searchInput.contains(event.target) && !suggestionsDiv.contains(event.target)) {
+                suggestionsDiv.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>
